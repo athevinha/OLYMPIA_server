@@ -147,7 +147,7 @@ io.on("connection", (socket) => {
     // getData();
     io.emit("add data ok ", getData());
   });
-  //=====================================================================================================
+  //===============================get ques======================================================================
   // let R = [];
   // MongoClient.connect(url, function (err, db) {
   //   if (err) throw err;
@@ -171,6 +171,10 @@ io.on("connection", (socket) => {
       data: point.users,
     });
   });
+  //======================================================
+  socket.on("on send answer", (UserAns) => {
+    io.emit("on send answer", UserAns);
+  });
   socket.on("change people", (point) => {
     // getData();
     //io.emit("add data ok ", getData());
@@ -182,18 +186,74 @@ io.on("connection", (socket) => {
     //console.log(user);
     io.emit("choose ques", ques);
   });
+
+  //=====================================================================================================
+  socket.on("disable", (dis) => {
+    //console.log(user);
+    io.emit("disable", dis);
+  });
+  socket.on("show list VCNV", (ques) => {
+    console.log("qergwerg");
+
+    io.emit("show list VCNV", ques);
+  });
+  socket.on("show answervcnv", (ques) => {
+    io.emit("show answervcnv", ques);
+  });
+  socket.on("Open Picture", (ques) => {
+    io.emit("Open Picture", ques);
+  });
+  //=====================================================================================================
+  //=====================================================================================================
+  socket.on("Add score", (obj) => {
+    AddPoint({ name: obj.name }, { $set: { score: obj.score } });
+    io.emit("Add score", obj);
+  });
+  //=====================================================================================================
+  socket.on("submit ques", (ques) => {
+    //console.log(user);
+    io.emit("choose ques", ques);
+  });
+  //======================================================================================
+  socket.on("on VCNV", (data) => {
+    io.emit("on VCNV", data);
+  });
   //=====================================================================================================
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
+    let quesVCNV = [];
+    let quesTT = [];
     dbo = db.db("mydb");
+    dbo
+      .collection("VCNV")
+      .find({})
+      .toArray(function (err, result) {
+        //Data = result;
+
+        quesVCNV = result;
+
+        //console.log(result);
+        db.close();
+      });
+    dbo
+      .collection("TT")
+      .find({})
+      .toArray(function (err, result) {
+        //Data = result;
+
+        quesTT = result;
+
+        //console.log(result);
+        db.close();
+      });
     dbo
       .collection("questions")
       .find({})
       .toArray(function (err, result) {
-        Data = result;
+        //Data = result;
 
-        socket.on("get ques", (user) => {
-          io.emit("get ques", result);
+        socket.on("get ques", (a) => {
+          io.emit("get ques", [result, quesVCNV, quesTT]);
         });
 
         //console.log(result);
