@@ -193,9 +193,17 @@ io.on("connection", (socket) => {
     io.emit("disable", dis);
   });
   socket.on("show list VCNV", (ques) => {
+    io.emit("show list VCNV", ques);
+  });
+
+  socket.on("on send VD", (ques) => {
+    io.emit("on send VD", ques);
+  });
+
+  socket.on("show list TT", (ques) => {
     console.log("qergwerg");
 
-    io.emit("show list VCNV", ques);
+    io.emit("show list TT", ques);
   });
   socket.on("show answervcnv", (ques) => {
     io.emit("show answervcnv", ques);
@@ -208,6 +216,10 @@ io.on("connection", (socket) => {
   socket.on("Add score", (obj) => {
     AddPoint({ name: obj.name }, { $set: { score: obj.score } });
     io.emit("Add score", obj);
+  });
+  socket.on("Add score TT", (obj) => {
+    AddPoint({ name: obj.name }, { $set: { score: obj.score } });
+    io.emit("Add score TT", obj);
   });
   //=====================================================================================================
   socket.on("submit ques", (ques) => {
