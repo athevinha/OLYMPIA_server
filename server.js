@@ -230,11 +230,31 @@ io.on("connection", (socket) => {
   socket.on("on VCNV", (data) => {
     io.emit("on VCNV", data);
   });
+  //======================================================================================
+  socket.on("time VD", (data) => {
+    io.emit("time VD", data);
+  });
+  socket.on("send VD", (data) => {
+    io.emit("send VD", data);
+  });
+  socket.on("choose Star", (data) => {
+    io.emit("choose Star", data);
+  });
+  socket.on("open choose quesVD", (data) => {
+    io.emit("open choose quesVD", data);
+  });
+  socket.on("close choose quesVD", (data) => {
+    io.emit("close choose quesVD", data);
+  });
+  socket.on("next pp vd", (data) => {
+    io.emit("next pp vd", data);
+  });
   //=====================================================================================================
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     let quesVCNV = [];
     let quesTT = [];
+    let quesVD = [];
     dbo = db.db("mydb");
     dbo
       .collection("VCNV")
@@ -243,6 +263,17 @@ io.on("connection", (socket) => {
         //Data = result;
 
         quesVCNV = result;
+
+        //console.log(result);
+        db.close();
+      });
+    dbo
+      .collection("VD")
+      .find({})
+      .toArray(function (err, result) {
+        //Data = result;
+
+        quesVD = result;
 
         //console.log(result);
         db.close();
@@ -265,7 +296,7 @@ io.on("connection", (socket) => {
         //Data = result;
 
         socket.on("get ques", (a) => {
-          io.emit("get ques", [result, quesVCNV, quesTT]);
+          io.emit("get ques", [result, quesVCNV, quesTT, quesVD]);
         });
 
         //console.log(result);
