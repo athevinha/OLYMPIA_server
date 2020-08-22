@@ -186,6 +186,10 @@ io.on("connection", (socket) => {
     //console.log(user);
     io.emit("choose ques", ques);
   });
+  socket.on("check ans vd", (ques) => {
+    //console.log(user);
+    io.emit("check ans vd", ques);
+  });
 
   //=====================================================================================================
   socket.on("disable", (dis) => {
