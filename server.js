@@ -3,7 +3,7 @@ const express = require("express");
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
-const io = require('socket.io')(server, { wsEngine: 'ws' });
+const io = require("socket.io")(server, { wsEngine: "ws" });
 //const io = require("socket.io")(server);
 const portIO = process.env.PORT || 5000;
 server.listen(portIO, () => `Listen on *: ${portIO}`);
@@ -215,6 +215,9 @@ io.on("connection", (socket) => {
     console.log("qergwerg");
 
     io.emit("show list TT", ques);
+  });
+  socket.on("Wrong Answer", (ques) => {
+    io.emit("Wrong Answer", ques);
   });
   socket.on("show answervcnv", (ques) => {
     io.emit("show answervcnv", ques);
