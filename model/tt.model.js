@@ -6,5 +6,5 @@ const exerciseSchema = mongoose.Schema({
     score: Number,
     video:String,
 });
-const users = mongoose.model("user", exerciseSchema);
-module.exports = users;
+const tts = mongoose.model("tt", exerciseSchema);
+module.exports = tts;

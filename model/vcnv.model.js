@@ -6,5 +6,5 @@ const exerciseSchema = mongoose.Schema({
     score: Number,
     image: String
 });
-const users = mongoose.model("user", exerciseSchema);
-module.exports = users;
+const vcnvs = mongoose.model("vcnv", exerciseSchema);
+module.exports = vcnvs;

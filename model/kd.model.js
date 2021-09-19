@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const exerciseSchema = mongoose.Schema({
     stt:Number,
-    question: String,
+    ques: String,
     score: Number
 });
-const users = mongoose.model("user", exerciseSchema);
-module.exports = users;
+const kds = mongoose.model("kd", exerciseSchema);
+module.exports = kds;

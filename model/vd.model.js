@@ -5,5 +5,5 @@ const exerciseSchema = mongoose.Schema({
     question: String,
     score: Number
 });
-const users = mongoose.model("user", exerciseSchema);
-module.exports = users;
+const vds = mongoose.model("vd", exerciseSchema);
+module.exports = vds;

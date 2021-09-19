@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 
 const exerciseSchema = mongoose.Schema({
-  username: String, // #
+  name: String, // #
   gmail: String, // #
-  password: String, // #
+  pass: String, // #
   score: Number,
+  avatar:String,
   tooken: String
 });
 const users = mongoose.model("user", exerciseSchema);

@@ -24,9 +24,9 @@ app.use(express.static(path.join(__dirname, "./../../")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../public/index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../../public/index.html"));
+// });
 
 server.listen(port, (serverError) => {
   if (serverError) throw serverError;
@@ -34,8 +34,8 @@ server.listen(port, (serverError) => {
 });
 
 let Data = [];
-const db = require('./model/index')
-const {users,kd,vcnv,tt,vd} = db;
+const db = require("./model/index");
+const { users, kds, vcnvs, tts, vds } = db;
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
@@ -48,7 +48,71 @@ db.mongoose
     console.log(e);
     process.exit();
   });
-
+// {
+//   username: String, // #
+//   gmail: String, // #
+//   password: String, // #
+//   score: Number,
+//   tooken: String
+// }
+app.post("/users/create", async (req, res) => {
+  let usera = new users(req.body);
+  try {
+    await usera.save();
+    res.send(usera);
+  } catch (e) {
+    console.log(e);
+  }
+});
+app.get("/users", async (req, res) => {
+  users.find({}, (err, database) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(database);
+  });
+});
+app.get("/kds", async (req, res) => {
+  kds.find({}, (err, database) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(database);
+  });
+});
+app.get("/vcnvs", async (req, res) => {
+  vcnvs.find({}, (err, database) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(database);
+  });
+});
+app.get("/tts", async (req, res) => {
+  tts.find({}, (err, database) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(database);
+  });
+});
+app.get("/vds", async (req, res) => {
+  vds.find({}, (err, database) => {
+    if (err) {
+      res.send(err);
+    }
+    res.send(database);
+  });
+});
+app.get("/kds/create", async (req, res) => {
+  let kda = new kds({ ques: "chun co bi ngu ko" });
+  try {
+    await kda.save();
+    res.send("Create kd successfully !");
+  } catch (e) {
+    console.log(e);
+  }
+});
 function addData(Obj, col) {
   MongoClient.connect(url, function (err, db) {
     if (err) throw err;
@@ -61,36 +125,51 @@ function addData(Obj, col) {
   });
 }
 
-function getData() {
-  // update
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    dbo = db.db("mydb");
-    dbo
-      .collection("users")
-      .find({})
-      .toArray(function (err, result) {
-        Data = result;
+// function getData() {
+//   // update
+//   MongoClient.connect(url, function (err, db) {
+//     if (err) throw err;
+//     dbo = db.db("mydb");
+//     dbo
+//       .collection("users")
+//       .find({})
+//       .toArray(function (err, result) {
+//         Data = result;
 
-        db.close();
-      });
-  });
-  console.log(Data);
+//         db.close();
+//       });
+//   });
+//   console.log(Data);
 
-  return Data;
-}
-function AddPoint(myQuery, NewQuery) {
-  MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    // var myQuery = { address: "Valley 345" };
-    //var NewQuery = { $set: { name: "Mickey", address: "Canyon 123" } };
-    dbo.collection("users").updateOne(myQuery, NewQuery, function (err, res) {
-      if (err) throw err;
-      console.log("1 document updated");
-      db.close();
-    });
+//   return Data;
+// }
+async function AddPoint (myQuery, NewQuery) {
+  await users.updateOne(myQuery, NewQuery, function (err, res) {
+        if (err) throw err;
+        console.log("1 document updated");
   });
+  // MongoClient.connect(url, function (err, db) {
+  //   if (err) throw err;
+  //   var dbo = db.db("mydb");
+  //   // var myQuery = { address: "Valley 345" };
+  //   //var NewQuery = { $set: { name: "Mickey", address: "Canyon 123" } };
+  //   dbo.collection("users").updateOne(myQuery, NewQuery, function (err, res) {
+  //     if (err) throw err;
+  //     console.log("1 document updated");
+  //     db.close();
+  //   });
+  // });
+  // let id = req.params.id;
+  // let updateGame = req.body;
+  // try {
+  //   await users.findById(id, (err, game) => {
+  //     users.rank = updateGame.rank;
+  //     users.save();
+  //     res.send(game);
+  //   });
+  // } catch (err) {
+  //   console.log(err);
+  // }
 }
 
 io.on("connection", (socket) => {
@@ -98,6 +177,9 @@ io.on("connection", (socket) => {
   console.log(`User connected: ${id}`);
   socket.on("disconnect", function () {
     console.log(socket.id + ": disconnected");
+  });
+  socket.on("get ques", (a) => {
+    io.emit("get ques");
   });
   socket.on("recive data", (msg) => {
     // MongoClient.connect(url, function (err, db) {
@@ -110,7 +192,14 @@ io.on("connection", (socket) => {
     //       io.emit("recive data", result);
     //     });
     // });
-    io.emit()
+    users.find({}, (err, database) => {
+      if (err) {
+        res.send(err);
+      }
+      io.emit("recive data", database);
+      // res.send(database);
+    });
+    // io.emit("recive data");
   });
   socket.on("recive current", (m) => {
     // MongoClient.connect(url, function (err, db) {
@@ -140,6 +229,16 @@ io.on("connection", (socket) => {
       stt: point.stt,
       data: point.users,
     });
+    // console.log(updateuser.user);
+    // try {
+    //    users.findById(updateuser.user.id, (err, user) => {
+    //     user.score = updateuser.score;
+    //     user.save();
+    //     res.send(user);
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   });
   //======================================================
   socket.on("on send answer", (UserAns) => {
@@ -156,6 +255,7 @@ io.on("connection", (socket) => {
   });
   //=====================================================================================================
   socket.on("choose ques", (ques) => {
+    console.log(ques)
     io.emit("choose ques", ques);
   });
   socket.on("check ans vd", (ques) => {
@@ -229,51 +329,25 @@ io.on("connection", (socket) => {
   socket.on("TongKetDiem", (data) => {
     io.emit("TongKetDiem", data);
   });
-  // MongoClient.connect(url, function (err, db) {
-  //   if (err) throw err;
-  //   let quesVCNV = [];
-  //   let quesTT = [];
-  //   let quesVD = [];
-  //   let quesCHP = [];
-  //   dbo = db.db("mydb");
-  //   dbo
-  //     .collection("VCNV")
-  //     .find({})
-  //     .toArray(function (err, result) {
-  //       quesVCNV = result;
-  //       db.close();
-  //     });
-  //   dbo
-  //     .collection("VD")
-  //     .find({})
-  //     .toArray(function (err, result) {
-  //       quesVD = result;
-  //       db.close();
-  //     });
-  //   dbo
-  //     .collection("CHP")
-  //     .find({})
-  //     .toArray(function (err, result) {
-  //       quesCHP = result;
-  //       db.close();
-  //     });
-  //   dbo
-  //     .collection("TT")
-  //     .find({})
-  //     .toArray(function (err, result) {
-  //       quesTT = result;
-  //       db.close();
-  //     });
-  //   dbo
-  //     .collection("questions")
-  //     .find({})
-  //     .toArray(function (err, result) {
-  //       socket.on("get ques", (a) => {
-  //         io.emit("get ques", [result, quesVCNV, quesTT, quesVD, quesCHP]);
-  //       });
-  //       db.close();
-  //     });
-  // });
+  socket.on("get ques", async (data)=>{
+    let questions = [];
+    await kds.find({}, async(err, database1) => {
+      await vcnvs.find({},async(err, database2) => {
+        await tts.find({},async(err, database3) => {
+          await vds.find({},async(err, database4) => {
+            questions.push(database1)
+            questions.push(database2)
+            questions.push(database3)
+            questions.push(database4)
+            console.log(questions)
+            io.emit("get ques",questions)
+          });
+        });
+      });
+    });
+
+
+  })
 });
 
 //
