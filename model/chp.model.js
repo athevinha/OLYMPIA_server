@@ -5,5 +5,5 @@ const exerciseSchema = mongoose.Schema({
     ques: String,
     point: Number
 });
-const vds = mongoose.model("vd", exerciseSchema);
-module.exports = vds;
+const chps = mongoose.model("chp", exerciseSchema);
+module.exports = chps;

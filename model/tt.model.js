@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const exerciseSchema = mongoose.Schema({
     stt:Number,
-    question: String,
+    ques: String,
+    answer:String,
     score: Number,
     video:String,
 });

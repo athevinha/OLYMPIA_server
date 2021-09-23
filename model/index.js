@@ -6,6 +6,7 @@ const tts = require("./tt.model")
 const kds = require("./kd.model")
 const vcnvs = require("./vcnv.model")
 const vds = require("./vd.model")
+const chps = require("./chp.model")
 
 db.url = dbConfig.url;
 db.mongoose = mongoose;
@@ -14,4 +15,5 @@ db.kds = kds;
 db.vcnvs = vcnvs;
 db.tts = tts;
 db.vds = vds;
+db.chps = chps;
 module.exports = db;
